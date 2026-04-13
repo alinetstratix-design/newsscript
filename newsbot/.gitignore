@@ -1,0 +1,11 @@
+# API Secrets & Configurations
+.env
+
+# Python Cache
+__pycache__/
+*.py[cod]
+
+# Logs & Temporary DB
+logs/
+*.log
+history.json
