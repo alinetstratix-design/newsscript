@@ -19,7 +19,7 @@ def get_rss_news():
         try:
             logger.info(f"Fetching RSS from {source_name}")
             feed = fetch_feed(url)
-            for e in feed.entries[:5]: 
+            for e in feed.entries[:20]: 
                 image_url = ""
                 # Attempt to extract image from RSS enclosures or media content
                 if 'media_content' in e and len(e.media_content) > 0:

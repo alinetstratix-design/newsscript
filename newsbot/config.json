@@ -1,8 +1,10 @@
 {
   "schedule_minutes": 30,
   "rss_sources": {
-    "Local Google News": "https://news.google.com/rss/search?q=haridwar+OR+dehradun+OR+uttarakhand&hl=hi&gl=IN&ceid=IN:hi",
-    "Amar Ujala": "https://www.amarujala.com/rss/uttarakhand.xml",
+    "Haridwar News": "https://www.amarujala.com/rss/haridwar.xml",
+    "Dehradun News": "https://www.amarujala.com/rss/dehradun.xml",
+    "Uttarakhand": "https://www.amarujala.com/rss/uttarakhand.xml",
+    "Local Search": "https://news.google.com/rss/search?q=haridwar+OR+dehradun+OR+uttarakhand&hl=hi&gl=IN&ceid=IN:hi",
     "National Top News": "https://news.google.com/rss?hl=hi&gl=IN&ceid=IN:hi",
     "World Top News": "https://news.google.com/rss/headlines/section/topic/WORLD?hl=hi&gl=IN&ceid=IN:hi"
   },
@@ -10,7 +12,7 @@
     "DIPR": "https://uttarainformation.gov.in/category/%e0%a4%aa%e0%a5%8d%e0%a4%b0%e0%a5%87%e0%a4%b8-%e0%a4%a8%e0%a5%8b%e0%a4%9f/"
   },
   "keywords": {
-    "high_weight": ["dhami", "धामी", "cm", "accident", "fire", "flood", "disaster", "breaking", "alert"],
-    "standard_weight": ["haridwar", "dehradun", "uttarakhand", "उत्तराखंड", "देहरादून", "हरिद्वार", "नैनीताल", "nainital"]
+    "high_weight": ["haridwar", "dehradun", "हरिद्वार", "देहरादून", "dhami", "धामी", "cm", "accident", "fire", "flood", "disaster", "breaking", "dipr"],
+    "standard_weight": ["uttarakhand", "उत्तराखंड", "नैनीताल", "nainital", "rishikesh", "roorkee", "laksar", "mussoorie", "ऋषिकेश", "रुड़की"]
   }
 }

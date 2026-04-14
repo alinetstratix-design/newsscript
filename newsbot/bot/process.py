@@ -25,17 +25,25 @@ def get_score(title):
 
 def filter_and_rank_news(items):
     out = []
+    # Sources that should have a baseline to compete
+    regional_sources = ["Haridwar News", "Dehradun News", "Uttarakhand", "Local Search", "DIPR"]
+    
     for n in items:
-        # Without checking keywords, simply pass top national and international news 
-        # Score 4 ensures it is just below breaking local news (5) but above standard local (1)
+        base_score = 0
+        if n["source"] in regional_sources:
+            base_score = 2 # Regional sources start with 2
+            
+        keyword_score = get_score(n["title"])
+        total_score = base_score + keyword_score
+        
         if n["source"] in ["National Top News", "World Top News"]:
-            n["score"] = 4
+            # National news stays at score 3 (fixed) so high-weight local news (2+5=7) wins
+            # and standard local news (2+1=3) ties or wins if multiple keywords exist
+            n["score"] = 3
             out.append(n)
-        else:
-            score = get_score(n["title"])
-            if score > 0:
-                n["score"] = score
-                out.append(n)
+        elif total_score > 0:
+            n["score"] = total_score
+            out.append(n)
             
     # Sort descending by score for ranking engine
     out.sort(key=lambda x: x["score"], reverse=True)

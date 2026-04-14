@@ -32,7 +32,7 @@ def get_dipr_news():
                     "source": "DIPR",
                     "type": "web"
                 })
-                if len(news) >= 3: 
+                if len(news) >= 10: 
                     break
     except Exception as e:
         logger.error(f"Error fetching DIPR: {e}")
