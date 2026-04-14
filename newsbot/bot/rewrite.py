@@ -19,22 +19,40 @@ def rewrite(item):
     if not api_key or api_key == "YOUR_GEMINI_API_KEY":
         return f"📢 {item['title']}\n\nSource: {item['source']}"
         
-    prompt = f"""
-    Please write a comprehensive, detailed, and engaging news article in Hindi based on the following news.
-    
-    Requirements:
-    - Length: Minimum 200 words, Maximum 600 words.
-    - Style: Professional, informative, and complete. Suitable for a Facebook news post or YouTube script.
-    - Formatting: Write in clear paragraphs. NO emojis or icons whatsoever. Absolutely zero icons/emojis.
-    - Language: 100% in pure Hindi (Devanagari script), Hinglish.
-    - Constraints: Do not include any URLs or source links.
-    
-    News Headline: {item['title']}
-    News Summary/Context: {item.get('summary', 'Context not provided, please expand based on the headline.')}
-    Source: {item['source']}
-    """
+    prompt = f"""You are a professional Hindi news editor and viral content creator.
+
+Your task is to process the following news and output a highly engaging, ready-to-publish Telegram message.
+
+=== NEWS TO PROCESS ===
+Title: {item['title']}
+Description: {item.get('description', item.get('summary', ''))}
+=======================
+
+=== GENERATION RULES ===
+1. FACT-CHECK: If the news appears to be fake or rumor, output ONLY: "UNVERIFIED/RISKY: Cannot process." Assuming it's safe (factual tone), proceed.
+2. CATEGORY: Detect category (Haridwar / Dehradun / Uttarakhand / National / International).
+3. POST CONTENT: Simple Hindi, fast-paced, 50-80 words, 2-3 short paragraphs. NO emojis in the text. Clear and factual. 
+4. ENGAGEMENT: First line must be a strong hook. Last line must be a highly relatable local engagement question for the Uttarakhand audience.
+5. HEADLINE: Short, bold, and powerful breaking news text (max 6-8 words).
+6. REEL HOOK: 1-line script for the first 2 seconds of a reel (shocking or curiosity trigger).
+7. TAGS: 6 keyword hashtags (lowercase).
+
+Output EXACTLY in the following format (do not add any extra text outside this format):
+
+📍 [Category]
+
+📰 [Headline]
+
+📝 [Post Content]
+
+🎬 Reel Hook:
+[Reel Hook Line]
+
+[#hashtags]"""
     try:
-        return generate_ai_content(prompt)
+        ai_text = generate_ai_content(prompt)
+        cta = "\n\n👉 ताज़ा ख़बरों के लिए पेज/चैनल को Like, Subscribe, Comment और Follow जरूर करें!"
+        return ai_text + cta
     except Exception as e:
         logger.error(f"Gemini AI error after retries: {e}")
         return f"📢 {item['title']}\n\nSource: {item['source']}"

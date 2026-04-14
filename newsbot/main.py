@@ -1,7 +1,6 @@
 import time
 import os
 import logging
-import schedule
 import json
 
 # Setup Production Logging
@@ -66,18 +65,3 @@ if __name__ == "__main__":
     
     # Run once immediately on start
     job()
-    
-    interval = config.get("schedule_minutes", 30)
-    logger.info(f"Scheduler configured for everyday {interval} minutes.")
-    schedule.every(interval).minutes.do(job)
-    
-    while True:
-        try:
-            schedule.run_pending()
-            time.sleep(1)
-        except KeyboardInterrupt:
-            logger.info("System shutting down...")
-            break
-        except Exception as e:
-            logger.error(f"Scheduler error: {e}")
-            time.sleep(60)
