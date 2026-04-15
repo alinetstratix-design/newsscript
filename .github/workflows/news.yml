@@ -2,11 +2,15 @@ name: News Bot
 
 on:
   schedule:
-    - cron: "0,10 * * * *"
+    - cron: "0,/10 * * * *"
   push:
     branches:
       - main
   workflow_dispatch:
+
+concurrency:
+  group: news-bot-run
+  cancel-in-progress: false
 jobs:
   run-bot:
     runs-on: ubuntu-latest
