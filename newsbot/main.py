@@ -20,6 +20,7 @@ logger = logging.getLogger("main")
 
 from ingestion.rss import get_rss_news
 from ingestion.web import get_dipr_news
+from ingestion.social import get_social_news
 from bot.process import filter_and_rank_news, deduplicate
 from bot.rewrite import rewrite
 from bot.telegram import send_message, send_photo
@@ -28,40 +29,39 @@ with open("config.json", "r", encoding="utf-8") as f:
     config = json.load(f)
 
 def job():
-    logger.info("Starting scheduled news fetch cycle...")
+    logger.info("Starting Senior-Level News Cycle (Multi-Platform)...")
     try:
-        raw_news = get_rss_news() + get_dipr_news()
-        logger.info(f"Total raw items fetched: {len(raw_news)}")
+        # Fetching from all sources
+        rss_data = get_rss_news()
+        web_data = get_dipr_news()
+        social_data = get_social_news()
+        
+        raw_news = rss_data + web_data + social_data
+        logger.info(f"Fetched | RSS: {len(rss_data)} | Web: {len(web_data)} | Social: {len(social_data)}")
         
         filtered_ranked = filter_and_rank_news(raw_news)
         new_news = deduplicate(filtered_ranked)
         
         if not new_news:
-            logger.info("No new news found to send.")
+            logger.info("No fresh news requiring attention.")
             return
 
-        logger.info(f"Processing top items out of {len(new_news)} fresh finds.")
+        logger.info(f"Processing Top {min(5, len(new_news))} items for multi-platform distribution.")
 
-        # Process top 5 items per cycle
         for item in new_news[:5]:
-            # Print item safely without risking charmap failures
-            logger.info(f"Applying AI Rewrite | Score: {item.get('score', 0)}")
+            logger.info(f"AI Rewriting: {item['title'][:50]}... | Score: {item.get('score', 0)}")
             text = rewrite(item)
             
             if "image" in item and item["image"]:
-                logger.info("Sending photo to Telegram...")
                 send_photo(item["image"], text)
             else:
-                logger.info("Sending text to Telegram...")
                 send_message(text)
                 
-            time.sleep(3)
-        logger.info("Cycle complete.")
+            time.sleep(5) # Slow down for platform limits
+        logger.info("Production Cycle Complete.")
     except Exception as e:
-        logger.exception("Critical error in job execution")
+        logger.exception("Operational critical failure")
 
 if __name__ == "__main__":
-    logger.info("Uttarakhand Production AI News Intelligence System Started")
-    
-    # Run once immediately on start
+    logger.info("Uttarakhand AI News Intelligence Engine Active")
     job()
