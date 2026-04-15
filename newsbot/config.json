@@ -1,18 +1,78 @@
 {
-  "schedule_minutes": 30,
+  "schedule_minutes": 10,
   "rss_sources": {
-    "Haridwar News": "https://www.amarujala.com/rss/haridwar.xml",
-    "Dehradun News": "https://www.amarujala.com/rss/dehradun.xml",
-    "Uttarakhand": "https://www.amarujala.com/rss/uttarakhand.xml",
     "Local Search": "https://news.google.com/rss/search?q=haridwar+OR+dehradun+OR+uttarakhand&hl=hi&gl=IN&ceid=IN:hi",
     "National Top News": "https://news.google.com/rss?hl=hi&gl=IN&ceid=IN:hi",
-    "World Top News": "https://news.google.com/rss/headlines/section/topic/WORLD?hl=hi&gl=IN&ceid=IN:hi"
+    "World Top News": "https://news.google.com/rss/headlines/section/topic/WORLD?hl=hi&gl=IN&ceid=IN:hi",
+    "Jagran Uttarakhand": "https://news.google.com/rss/search?q=site:jagran.com+uttarakhand&hl=hi&gl=IN&ceid=IN:hi",
+    "News18 Uttarakhand": "https://news.google.com/rss/search?q=site:hindi.news18.com+uttarakhand&hl=hi&gl=IN&ceid=IN:hi",
+    "Hindustan Local": "https://news.google.com/rss/search?q=site:livehindustan.com+uttarakhand&hl=hi&gl=IN&ceid=IN:hi",
+    "ETV Bharat UK": "https://news.google.com/rss/search?q=site:etvbharat.com+uttarakhand&hl=hi&gl=IN&ceid=IN:hi",
+    "Amar Ujala Haridwar": "https://www.amarujala.com/rss/haridwar.xml",
+    "Amar Ujala Dehradun": "https://www.amarujala.com/rss/dehradun.xml",
+    "National NDTV": "https://news.google.com/rss/search?q=site:ndtv.in+india+national&hl=hi&gl=IN&ceid=IN:hi",
+    "National ZeeNews": "https://zeenews.india.com/rss/india-national-news.xml",
+    "National TOI": "https://timesofindia.indiatimes.com/rssfeeds/-2128936835.cms",
+    "World News Feed": "https://news.google.com/rss/headlines/section/topic/WORLD?hl=hi&gl=IN&ceid=IN:hi"
+  },
+  "social_sources": {
+    "Facebook_Local": "site:facebook.com \"haridwar news\" OR \"dehradun news\" OR \"uttarakhand breaking\"",
+    "YouTube_Trending": "site:youtube.com \"uttarakhand local news\" OR \"accident news uttarakhand\"",
+    "X_Twitter_Alerts": "site:twitter.com \"haridwar accident\" OR \"dehradun traffic\""
   },
   "web_sources": {
     "DIPR": "https://uttarainformation.gov.in/category/%e0%a4%aa%e0%a5%8d%e0%a4%b0%e0%a5%87%e0%a4%b8-%e0%a4%a8%e0%a5%8b%e0%a4%9f/"
   },
   "keywords": {
-    "high_weight": ["haridwar", "dehradun", "हरिद्वार", "देहरादून", "dhami", "धामी", "cm", "accident", "fire", "flood", "disaster", "breaking", "dipr"],
-    "standard_weight": ["uttarakhand", "उत्तराखंड", "नैनीताल", "nainital", "rishikesh", "roorkee", "laksar", "mussoorie", "ऋषिकेश", "रुड़की"]
+    "high_weight": [
+      "haridwar",
+      "dehradun",
+      "हरिद्वार",
+      "देहरादून",
+      "accident",
+      "दुर्घटना",
+      "हादसा",
+      "मौत",
+      "fire",
+      "आग",
+      "flood",
+      "बाढ़",
+      "breaking",
+      "धामी",
+      "dhami",
+      "jwalapur",
+      "kankhal",
+      "bahadrabad",
+      "premnagar",
+      "mussoorie",
+      "vikasnagar",
+      "roorkee",
+      "laksar",
+      "ऋषिकेश",
+      "rishikesh"
+    ],
+    "standard_weight": [
+      "uttarakhand",
+      "उत्तराखंड",
+      "नैनीताल",
+      "nainital",
+      "haldwani",
+      "kathgodam",
+      "pauri",
+      "tehri",
+      "rudraprayag",
+      "chamoli",
+      "badrinath",
+      "kedarnath",
+      "traffice",
+      "jam",
+      "election",
+      "chunaav",
+      "cabinet",
+      "cm",
+      "shasan",
+      "police",
+      "arrest"
+    ]
   }
 }
