@@ -1,9 +1,13 @@
 import os
 import logging
+import json
 import google.generativeai as genai
 from tenacity import retry, stop_after_attempt, wait_fixed
 
 logger = logging.getLogger(__name__)
+
+# Use the most stable available Gemini 1.5 model
+MODEL_NAME = 'gemini-1.5-flash'
 
 api_key = os.getenv("GEMINI_API_KEY")
 if api_key and api_key != "YOUR_GEMINI_API_KEY":
@@ -11,48 +15,62 @@ if api_key and api_key != "YOUR_GEMINI_API_KEY":
 
 @retry(stop=stop_after_attempt(3), wait=wait_fixed(3))
 def generate_ai_content(prompt):
-    model = genai.GenerativeModel('gemini-2.5-flash')
+    model = genai.GenerativeModel(MODEL_NAME)
     response = model.generate_content(prompt)
+    if not response.text:
+        raise Exception("Empty response from Gemini")
     return response.text.strip()
 
 def rewrite(item):
     if not api_key or api_key == "YOUR_GEMINI_API_KEY":
         return f"📢 {item['title']}\n\nSource: {item['source']}"
         
-    prompt = f"""You are a professional Hindi news editor and viral content creator.
-
-Your task is to process the following news and output a highly engaging, ready-to-publish Telegram message.
+    prompt = f"""You are a senior Hindi news editor and growth expert for Uttarakhand's top digital news network.
+Your goal is to reach 100k followers by providing hyper-local, factual, and neutral news.
 
 === NEWS TO PROCESS ===
 Title: {item['title']}
 Description: {item.get('description', item.get('summary', ''))}
+Source: {item['source']}
+Trending: {"YES" if item.get('trending') else "NO"}
+Area: {item.get('category', 'Uttarakhand')}
 =======================
 
 === GENERATION RULES ===
-1. FACT-CHECK: If the news appears to be fake or rumor, output ONLY: "UNVERIFIED/RISKY: Cannot process." Assuming it's safe (factual tone), proceed.
-2. CATEGORY: Detect category (Haridwar / Dehradun / Uttarakhand / National / International).
-3. POST CONTENT: Simple Hindi, fast-paced, 50-80 words, 2-3 short paragraphs. NO emojis in the text. Clear and factual. 
-4. ENGAGEMENT: First line must be a strong hook. Last line must be a highly relatable local engagement question for the Uttarakhand audience.
-5. HEADLINE: Short, bold, and powerful breaking news text (max 6-8 words).
-6. REEL HOOK: 1-line script for the first 2 seconds of a reel (shocking or curiosity trigger).
-7. TAGS: 6 keyword hashtags (lowercase).
+1. TONE: Neutral, objective, and factual. Do not take sides (Govt/Opposition). Use "Sarkari" terminology for official notes.
+2. FORMATTING: Output content for 4 specific platforms.
+3. LANGUAGE: Pure Hindi for main content; Hinglish mix for Hooks and Hashtags.
+4. ACCIDENTS: If this is an accident (हादसा), prioritize safety warnings and traffic status.
 
-Output EXACTLY in the following format (do not add any extra text outside this format):
+Output EXACTLY in this structured format:
 
-📍 [Category]
+--- FACEBOOK (Engagement Heavy) ---
+📍 [Neighborhood/Area] 
+📰 [Powerful Headline]
+📝 [50-word narrative summary including impact on locals]
+❓ [Local engagement question, e.g., "क्या आपके इलाके में भी यही हाल है?"]
 
-📰 [Headline]
+--- INSTAGRAM/YT REELS (Visual Hook) ---
+🎬 0s-2s Hook: [Shocking or curiosity trigger line in Hinglish]
+🎬 Script: [3 lines of punchy, fast-paced script for a 15-sec reel]
+#️⃣ [5 Viral Reels Hashtags]
 
-📝 [Post Content]
+--- X (Breaking/Fast) ---
+⚡ [Short Breaking News Text - Max 200 chars]
+🔗 [Source Link if available]
+#UttarakhandNews #Breaking
 
-🎬 Reel Hook:
-[Reel Hook Line]
+--- YT COMMUNITY ---
+📊 [Formal Summary - 2 paragraphs]
+🗳️ Community Poll Suggestion: [A binary poll question related to the news]
 
-[#hashtags]"""
+--- TAGS ---
+[10 keyword hashtags, including specific areas like #Haridwar #Dehradun]"""
+
     try:
         ai_text = generate_ai_content(prompt)
-        cta = "\n\n👉 ताज़ा ख़बरों के लिए पेज/चैनल को Like, Subscribe, Comment और Follow जरूर करें!"
-        return ai_text + cta
+        footer = "\n\n👉 ताज़ा ख़बरों के लिए Like, Follow और Subscribe करें!"
+        return ai_text + footer
     except Exception as e:
-        logger.error(f"Gemini AI error after retries: {e}")
-        return f"📢 {item['title']}\n\nSource: {item['source']}"
+        logger.error(f"Gemini AI error: {e}")
+        return f"📢 {item['title']}\n\nSource: {item['source']}\n(AI Rewrite Failed)"
