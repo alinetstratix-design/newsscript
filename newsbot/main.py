@@ -19,7 +19,7 @@ logging.basicConfig(
 logger = logging.getLogger("main")
 
 from ingestion.rss import get_rss_news
-from ingestion.web import get_dipr_news
+from ingestion.web import get_web_news
 from ingestion.social import get_social_news
 from bot.process import filter_and_rank_news, deduplicate
 from bot.rewrite import rewrite
@@ -33,7 +33,7 @@ def job():
     try:
         # Fetching from all sources
         rss_data = get_rss_news()
-        web_data = get_dipr_news()
+        web_data = get_web_news()
         social_data = get_social_news()
         
         raw_news = rss_data + web_data + social_data

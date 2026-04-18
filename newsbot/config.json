@@ -21,7 +21,10 @@
     "X_Twitter_Alerts": "site:twitter.com \"haridwar accident\" OR \"dehradun traffic\""
   },
   "web_sources": {
-    "DIPR": "https://uttarainformation.gov.in/category/%e0%a4%aa%e0%a5%8d%e0%a4%b0%e0%a5%87%e0%a4%b8-%e0%a4%a8%e0%a5%8b%e0%a4%9f/"
+    "DIPR": "https://uttarainformation.gov.in/category/%e0%a4%aa%e0%a5%8d%e0%a4%b0%e0%a5%87%e0%a4%b8-%e0%a4%a8%e0%a5%8b%e0%a4%9f/",
+    "DIPR_English": "https://uttarainformation.gov.in/en/category/press-note/",
+    "Dehradun_NIC": "https://dehradun.nic.in/notices/press-release/",
+    "Haridwar_NIC": "https://haridwar.nic.in/notices/press-release/"
   },
   "keywords": {
     "high_weight": [

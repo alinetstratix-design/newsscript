@@ -3,11 +3,14 @@ import logging
 import json
 import google.generativeai as genai
 from tenacity import retry, stop_after_attempt, wait_fixed
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logger = logging.getLogger(__name__)
 
 # Use the most stable available Gemini 1.5 model
-MODEL_NAME = 'gemini-1.5-flash'
+MODEL_NAME = 'models/gemini-1.5-flash'
 
 api_key = os.getenv("GEMINI_API_KEY")
 if api_key and api_key != "YOUR_GEMINI_API_KEY":
@@ -25,47 +28,65 @@ def rewrite(item):
     if not api_key or api_key == "YOUR_GEMINI_API_KEY":
         return f"📢 {item['title']}\n\nSource: {item['source']}"
         
-    prompt = f"""You are a senior Hindi news editor and growth expert for Uttarakhand's top digital news network.
-Your goal is to reach 100k followers by providing hyper-local, factual, and neutral news.
+    prompt = f"""तुम एक अनुभवी हिंदी न्यूज़ एंकर और रिपोर्टर हो।
+तुम्हारी शैली शांत, सवाल पूछने वाली और जमीन से जुड़ी हो (Ravish Kumar और Anjana Om Kashyap जैसी)।
 
-=== NEWS TO PROCESS ===
+नीचे दी गई खबर को ऐसे लिखो जैसे कोई असली पत्रकार लिखता है — भरोसेमंद, साफ और इंसानी अंदाज़ में।
+
+========================
+खबर:
 Title: {item['title']}
-Description: {item.get('description', item.get('summary', ''))}
+Details: {item.get('description', item.get('summary', ''))}
 Source: {item['source']}
-Trending: {"YES" if item.get('trending') else "NO"}
 Area: {item.get('category', 'Uttarakhand')}
-=======================
+========================
 
-=== GENERATION RULES ===
-1. TONE: Neutral, objective, and factual. Do not take sides (Govt/Opposition). Use "Sarkari" terminology for official notes.
-2. FORMATTING: Output content for 4 specific platforms.
-3. LANGUAGE: Pure Hindi for main content; Hinglish mix for Hooks and Hashtags.
-4. ACCIDENTS: If this is an accident (हादसा), prioritize safety warnings and traffic status.
+नियम:
+- कोई emoji नहीं
+- कोई AI जैसा formatting नहीं
+- भाषा सरल, natural और conversational हो
+- tone calm रहे, sensational नहीं
+- जरूरी जगह पर सवाल पूछो (viewer connect के लिए)
+- अगर हादसा है तो असर और सावधानी ज़रूर बताओ
+- लोकल एंगल जोड़ो (हरिद्वार, रुड़की आदि)
+- खबर believable लगे, script नहीं
 
-Output EXACTLY in this structured format:
+OUTPUT FORMAT:
 
---- FACEBOOK (Engagement Heavy) ---
-📍 [Neighborhood/Area] 
-📰 [Powerful Headline]
-📝 [50-word narrative summary including impact on locals]
-❓ [Local engagement question, e.g., "क्या आपके इलाके में भी यही हाल है?"]
+FACEBOOK POST:
+[हेडलाइन]
 
---- INSTAGRAM/YT REELS (Visual Hook) ---
-🎬 0s-2s Hook: [Shocking or curiosity trigger line in Hinglish]
-🎬 Script: [3 lines of punchy, fast-paced script for a 15-sec reel]
-#️⃣ [5 Viral Reels Hashtags]
+[60–80 शब्दों में पूरी खबर, बीच में 1–2 सवाल naturally डालो]
 
---- X (Breaking/Fast) ---
-⚡ [Short Breaking News Text - Max 200 chars]
-🔗 [Source Link if available]
-#UttarakhandNews #Breaking
+[लोकल असर या ground situation]
 
---- YT COMMUNITY ---
-📊 [Formal Summary - 2 paragraphs]
-🗳️ Community Poll Suggestion: [A binary poll question related to the news]
+[End में soft CTA — जैसे: 
+"ऐसी ही खबरों के लिए हमारे पेज को फॉलो करें, आप क्या सोचते हैं हमें जरूर बताएं।"]
 
---- TAGS ---
-[10 keyword hashtags, including specific areas like #Haridwar #Dehradun]"""
+INSTAGRAM REEL SCRIPT:
+Hook (Hinglish, calm but engaging)
+
+Line 1  
+Line 2  
+Line 3  
+
+CTA (short, natural): Follow for real local updates
+
+Hashtags: 5 simple hashtags (no spam)
+
+X POST:
+Short breaking line (max 180 characters, neutral tone)
+
+YOUTUBE COMMUNITY:
+2 छोटे पैराग्राफ (calm + questioning tone)
+
+Poll: Yes/No based question
+
+End line:
+"अगर आप अपने इलाके की सच्ची खबरें देखना चाहते हैं, तो जुड़े रहें।"
+
+TAGS:
+10 clean hashtags (local + topic based)"""
 
     try:
         ai_text = generate_ai_content(prompt)
