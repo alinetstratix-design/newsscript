@@ -83,23 +83,38 @@ def filter_and_rank_news(items):
 
 def load_history():
     if os.path.exists(HISTORY_FILE):
-        with open(HISTORY_FILE, "r") as f:
+        with open(HISTORY_FILE, "r", encoding="utf-8") as f:
             try:
-                return json.load(f)
+                data = json.load(f)
+                # Migrate old string-only history to object-based history
+                if data and isinstance(data[0], str):
+                    return [{"link": link, "title": ""} for link in data]
+                return data
             except:
                 return []
     return []
 
 def save_history(hist):
-    with open(HISTORY_FILE, "w") as f:
-        json.dump(hist[-500:], f) # Increased history limit
+    with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+        json.dump(hist[-500:], f, ensure_ascii=False)
 
 def deduplicate(items):
     hist = load_history()
     new_items = []
+    
+    # Track seen links and titles for the current run and history
+    seen_links = {h["link"] for h in hist if "link" in h}
+    seen_titles = {re.sub(r'[^\w\s]', '', h["title"]).lower().strip() for h in hist if "title" in h and h["title"]}
+    
     for item in items:
-        if item["link"] not in hist:
+        link = item["link"]
+        title_norm = re.sub(r'[^\w\s]', '', item["title"]).lower().strip()
+        
+        if link not in seen_links and title_norm not in seen_titles:
             new_items.append(item)
-            hist.append(item["link"])
+            seen_links.add(link)
+            seen_titles.add(title_norm)
+            hist.append({"link": link, "title": item["title"]})
+            
     save_history(hist)
     return new_items

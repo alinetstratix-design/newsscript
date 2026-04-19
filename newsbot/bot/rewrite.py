@@ -10,7 +10,8 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 # Use the most stable available Gemini 1.5 model
-MODEL_NAME = 'models/gemini-1.5-flash'
+# Use 'gemini-flash-latest' for the best combination of speed and availability
+MODEL_NAME = 'gemini-flash-latest'
 
 api_key = os.getenv("GEMINI_API_KEY")
 if api_key and api_key != "YOUR_GEMINI_API_KEY":
@@ -93,5 +94,5 @@ TAGS:
         footer = "\n\n👉 ताज़ा ख़बरों के लिए Like, Follow और Subscribe करें!"
         return ai_text + footer
     except Exception as e:
-        logger.error(f"Gemini AI error: {e}")
+        logger.exception(f"Gemini AI error during rewrite: {e}")
         return f"📢 {item['title']}\n\nSource: {item['source']}\n(AI Rewrite Failed)"

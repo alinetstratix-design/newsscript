@@ -1,5 +1,5 @@
 {
-  "schedule_minutes": 10,
+  "schedule_minutes": 60,
   "rss_sources": {
     "Local Search": "https://news.google.com/rss/search?q=haridwar+OR+dehradun+OR+uttarakhand&hl=hi&gl=IN&ceid=IN:hi",
     "National Top News": "https://news.google.com/rss?hl=hi&gl=IN&ceid=IN:hi",
