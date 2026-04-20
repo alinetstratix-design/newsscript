@@ -2,7 +2,7 @@ name: News Bot
 
 on:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "****sd0 * * * *"
   push:
     branches:
       - main
